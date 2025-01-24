@@ -60,9 +60,12 @@ abstract class AbstractBaseCrudRepository implements BaseCrudEntityInterface
         if ($filter) {
             $query = $query->where('nome', 'LIKE', "%{$filter}%");
         }
-        $query = $query->orderBy('nome', $order);
-        $dataDb = $query->paginate($totalPage);
 
+        if ($order) {
+            $query = $query->orderBy('nome', $order);
+        }
+
+        $dataDb = $query->paginate($totalPage);
         return $dataDb;
     }
 }

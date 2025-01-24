@@ -119,7 +119,7 @@ class UserExternalServiceTest extends TestCase
 
     public function testGetAllPaginate()
     {
-        $response = $this->instanceService()->getAllPaginate();
+        $response = $this->instanceService()->getAllPaginateWithCache();
         $this->assertNotNull($response);
     }
 

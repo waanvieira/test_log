@@ -11,10 +11,6 @@ use Tests\TestCase;
 class UserExternalControllerTest extends TestCase
 {
     use DatabaseTransactions;
-    // use TestValidations;
-    // use TestSaves;
-    // use TestResources;
-    // // use WithOutMiddleware;
 
     private $account;
     private $controller;
@@ -23,15 +19,6 @@ class UserExternalControllerTest extends TestCase
     {
         parent::setUp();
         $this->controller = $this->controller();
-        // $fakeAccount = UserExternal::factory()->create([
-        //     'id' => Uuid::uuid4()->toString(),
-        //     'name' => fake()->name(),
-        //     'email' => 'teste@dev.com.br',
-        //     'balance' => 10,
-        //     'password' => '1234',
-        // ]);
-
-        // $this->account = $this->model()::where('email', $fakeAccount->email)->first();
     }
 
     private $serializedFields = [
@@ -49,16 +36,7 @@ class UserExternalControllerTest extends TestCase
     public function testGetAll()
     {
         $response = $this->get(route('users.index'));
-        $response
-            ->assertStatus(200);
-            // ->assertJsonStructure(
-            //     [
-            //         'data' => [
-            //             '*' => $this->serializedFields
-            //         ],
-            //         'links' => [],
-            //     ]
-            // );
+        $response->assertStatus(200);
     }
 
     public function model()

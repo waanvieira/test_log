@@ -7,9 +7,12 @@ namespace App\Service;
 use App\Gateway\UserGatewayService;
 use App\Repositories\Eloquent\UserExternalModelRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class UserExternalService
 {
+    const CACHE_TIME = 60 * 5;
+
     public function __construct(
         protected UserGatewayService $userGatewayService,
         protected UserExternalModelRepository $respository
@@ -31,9 +34,11 @@ class UserExternalService
         });
     }
 
-    public function getAllPaginate(string $filter = '', $order = 'DESC', int $page = 1, int $totalPage = 15)
+    public function getAllPaginateWithCache(string $filter = '', string $order = 'DESC', int $page = 1, int $totalPage = 15)
     {
-        return $this->respository->getAllPaginate($filter, $order, $page, $totalPage);
+        return Cache::remember("users_page_$page", self::CACHE_TIME, function ()  use ($filter, $order, $page, $totalPage) {
+            return $this->respository->getAllPaginate($filter, $order, $page, $totalPage);
+        });
     }
 
     public function formatPayloadInsert(array $payload)

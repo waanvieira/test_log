@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Service\UserExternalService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class RegisterUsersByExternalEndPoint extends Command
 {
@@ -35,5 +36,6 @@ class RegisterUsersByExternalEndPoint extends Command
         $paramSearch["nat"] = "br";
         $paramSearch["results"] = 10;
         $this->userExternalService->insertUsersByExternalApi($paramSearch);
+        Cache::forget('active_users');
     }
 }

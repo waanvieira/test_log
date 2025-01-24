@@ -10,6 +10,7 @@ Projeto simplificado de transferências entre contas que utiliza o padrão Saga,
 - PHP 8.2
 - Laravel 11.7.0
 - MYSQL 8
+- Redis 7.4
 
 # Como executar o projeto
 
@@ -36,13 +37,11 @@ docker-compose exec app php artisan test
 
 Pode encontrar as request das rotas na pasta "requestshttp"
 
-* Checar se os endpoins estão no ar <br>
-  http://localhost:8081/health <br>
-  http://localhost:8082/health <br>
-  http://localhost:8083/health <br>
+* Checar se o app está no ar <br>
+  http://127.0.1.1:9003/api/v1/health <br>  
 
-* Os usuários são criados a partir de um endpoint externo, os usuários estão sendo criados por um comando executado a cada 5 minutos (para funcionar, por favor, fazer o agendamento no cron)
-php artisan app:register-users-by-external-end-point
+* Os usuários são criados a partir de um endpoint externo, os usuários estão sendo criados por um comando executado a cada 5 minutos (para funcionar, por favor, fazer o agendamento no cron) <br>
+   php artisan app:register-users-by-external-end-point
 
 * Listar usuários
 
