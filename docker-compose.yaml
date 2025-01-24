@@ -1,0 +1,58 @@
+version: "2.1"
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.42.12.0/28
+          gateway: 172.42.12.1
+services:
+  app:
+    build: .
+    container_name: app
+    volumes:
+      - ./:/var/www
+    tty: true
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=userapp
+      - MYSQL_PASSWORD=root
+    ports:
+      - 3306:3306
+    volumes:
+      - .docker/dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+
+ ##### SERVICES ###########
+  adminer:
+    image: adminer
+    ports:
+    - 8083:8080
+  app-nginx:
+    build: ./.docker/nginx
+    restart: always
+    ports:
+      - "9003:80"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - app
+
+  app-redis:
+    image: redis:alpine
+    expose:
+      - 6379
