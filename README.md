@@ -10,7 +10,6 @@ Projeto simplificado de transferências entre contas que utiliza o padrão Saga,
 - PHP 8.2
 - Laravel 11.7.0
 - MYSQL 8
-- RabbitMQ
 
 # Como executar o projeto
 
@@ -20,56 +19,38 @@ https://www.docker.com/get-started/
 
 ```bash
 # clonar repositório
-git clone https://github.com/waanvieira/simplified_payment_platform.git
+git clone https://github.com/waanvieira/test_log.git
 
 # entrar na pasta do projeto back end
-cd simplified_payment_platform
+cd test_log
 
-# executar o projeto
-docker-compose up -d
+# executar o comando
+./entrypoint.sh
 
 # Executar testes
 
-docker-compose exec app_account vendor/bin/phpunit
-
-# Executar o consumer do ms_account
-docker-compose exec app_account php artisan rabbitmq:consumer
-
-# Executar o consumer do ms_transaction
-docker-compose exec app_transaction php artisan rabbitmq:consumer
-
-# Executar o consumer do ms_notification
-docker-compose exec app_notification php artisan rabbitmq:consumer
+docker-compose exec app php artisan test
 
 ```
+# Rotas do sistema
 
-# Uso do sistema
+Pode encontrar as request das rotas na pasta "requestshttp"
 
 * Checar se os endpoins estão no ar <br>
   http://localhost:8081/health <br>
   http://localhost:8082/health <br>
   http://localhost:8083/health <br>
 
-* Criar conta
-curl  -X POST 'http://localhost:8001/api/accounts' \
-  --header 'Accept: application/json' \
-  {
-    "name": "user test",
-    "cpf_cnpj": "153.267.740-54",
-    "email": "email@dev.teste",
-    "password": "123456"
-  }
+* Os usuários são criados a partir de um endpoint externo, os usuários estão sendo criados por um comando executado a cada 5 minutos (para funcionar, por favor, fazer o agendamento no cron)
+php artisan app:register-users-by-external-end-point
 
-* Realizar transferência
+* Listar usuários
 
 Para reallizar transferências é obrigatório que tenha criado contas válidas e com saldo positivo para realizar a transferência
 
-curl  -X POST 'http://localhost:8001/api/transfer' \
+curl  -X GET 'http://localhost:9003/api/v1/users' \
   --header 'Accept: application/json' \
   {
-    "payer_id": "7e0b17a3-2f57-4273-a48a-9f81ed2958eb",
-    "payee_id": "8afd4fc5-5989-4b69-a799-1a0e2866235d",
-    "value": 10
   }
 
 # Autor
